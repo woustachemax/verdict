@@ -42,6 +42,7 @@ mdurl==0.1.2
 orjson==3.11.9
 ormsgpack==1.12.2
 packaging==26.2
+psycopg2-binary==2.9.12
 pwdlib==0.3.0
 pydantic==2.13.4
 pydantic-extra-types==2.11.1

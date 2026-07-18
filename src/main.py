@@ -1,25 +1,24 @@
-from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends
 from sqlmodel import Session
+from contextlib import asynccontextmanager
 from sqlalchemy import text
 from src.database import create_db_and_tables, get_session
-
+from src.routers import auth
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     create_db_and_tables()
     yield
 
+app = FastAPI(title='Verdict', lifespan=lifespan)
 
-app = FastAPI(title="Verdict", lifespan=lifespan)
-
+@app.include_router(auth.router, '/auth', tags=["auth"])
 
 @app.get('/health')
 def health():
-    return {"status": "ok"}
-
+    return {"status":"ok"}
 
 @app.get('/db-ping')
 def db_ping(session: Session = Depends(get_session)):
     session.execute(text("SELECT 1"))
-    return {"db": "ok"}
+    return {"db":"ok"}
