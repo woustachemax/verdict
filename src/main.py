@@ -12,7 +12,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title='Verdict', lifespan=lifespan)
 
-@app.include_router(auth.router, '/auth', tags=["auth"])
+app.include_router(auth.router, prefix='/auth', tags=["auth"])
 
 @app.get('/health')
 def health():
