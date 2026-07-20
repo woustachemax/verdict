@@ -15,24 +15,24 @@ bearer = HTTPBearer()
 def hash_password(password:str)->str:
     return password_hash.hash(password)
 
-def verify_password(hashed:str, plain: str)->bool:
-    return password_hash.verify(hashed, plain)
+def verify_password(plain: str, hashed: str) -> bool:
+    return password_hash.verify(plain, hashed)
 
 def generate_token(user_id: UUID)->str:
-    now = datetime.utcnow
+    now = datetime.utcnow()
     payload = {
         "sub": str(user_id),
         "type": "access",
         "iat": now,
-        "exp": now + timedelta(settings.JWT_EXPIRE_MINS)
+        "exp": now + timedelta(minutes=settings.JWT_EXPIRE_MINS)
     }
     return jwt.encode(payload, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
 
-def verify_token(token: str)->UUID:
+def verify_token(token: str) -> UUID:
     try:
-        payload = jwt.decode(token, settings.JWT_SECRET, settings.JWT_EXPIRE_MINS)
+        payload = jwt.decode(token, settings.JWT_SECRET, algorithms=[settings.JWT_ALGORITHM])
         return UUID(payload["sub"])
-    except(jwt.DecodeError, ValueError, KeyError):
+    except (jwt.DecodeError, ValueError, KeyError, TypeError):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="unauthorized")
 
 

@@ -4,7 +4,7 @@ from datetime import datetime
 from uuid import UUID, uuid4
 
 class Role(Enum):
-    admin = "admin",
+    admin = "admin"
     viewer = "viewer"
 
 class User(SQLModel, table=True):

@@ -3,7 +3,7 @@ from sqlmodel import Session
 from contextlib import asynccontextmanager
 from sqlalchemy import text
 from src.database import create_db_and_tables, get_session
-from src.routers import auth
+from src.routers import auth, agent
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -13,6 +13,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title='Verdict', lifespan=lifespan)
 
 app.include_router(auth.router, prefix='/auth', tags=["auth"])
+app.include_router(agent.router, prefix='/agent', tags=["agent"])
 
 @app.get('/health')
 def health():
